@@ -5,6 +5,12 @@ import java.util.Optional;
 
 import com.example.springmongocrud.entity.Book;
 import com.example.springmongocrud.repository.BookRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,6 +31,10 @@ public class BookController {
 		return ResponseEntity.ok("Added book with id : " + book.getId());
 	}
 
+	@Operation(summary = "Get all books")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Found Books", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Book.class)))}),
+			@ApiResponse(responseCode = "404", description = "No Books found", content = @Content) })
 	@GetMapping("/getBooks")
 	public ResponseEntity<List<Book>> getBooks() {
 		List<Book> books = repository.findAll();
